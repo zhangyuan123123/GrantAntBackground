@@ -2,5 +2,45 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jk.mapper.GroundServiceMapper">
+<select id="tree" resultType="com.jk.utils.MenuTree">
+    select * from tree
+</select>
 
+    <select id="zysreferdata" resultType="com.jk.model.ComAndUser">
+        select * from deliverylist d inner join t_company t on d.gongsiid=t.id
+        where 1=1 and t.id=#{comAndUser.gongsiid}
+         limit #{page},#{limit}
+    </select>
+    
+    <select id="getprovince" resultType="com.jk.model.Area">
+        select * from t_area where pid=0 and id &lt;&gt;0;
+    </select>
+
+    <select id="zysgetcity" resultType="com.jk.model.Area">
+        select * from t_area where pid=#{id}
+    </select>
+
+    <select id="zysgetcounty" resultType="com.jk.model.Area">
+         select * from t_area where pid=#{id}
+    </select>
+
+    <select id="referdetailed" resultType="com.jk.model.SupperDataModel">
+         select * from deliverylist d inner join t_company t on d.gongsiid=t.id
+         inner join shouhuofang s on d.id=s.delveid where d.id=#{id}
+    </select>
+
+    <update id="updatedetailed">
+        update  deliverylist d inner join t_company t on d.gongsiid=t.id
+         inner join shouhuofang s on d.id=s.delveid  set d.status=4 where d.id=#{id}
+    </update>
+
+  <update id="zysaddliyou">
+    update deliverylist d inner join t_company t on d.gongsiid=t.id
+         inner join shouhuofang s on d.id=s.delveid  set d.liyou=#{liyou} where d.id=#{gid}
+  </update>
+
+    <update id="updatestatus">
+        update  deliverylist d inner join t_company t on d.gongsiid=t.id
+         inner join shouhuofang s on d.id=s.delveid  set d.status=3 where d.id=#{id}
+    </update>
 </mapper>

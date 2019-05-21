@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="/js/jquery-1.9.1.min.js"></script>
+<link rel="stylesheet" href="/js/layui/css/layui.css"/>
+<link rel="stylesheet" href="/js/layui/css/modules/laydate/default/laydate.css"/>
+<link rel="stylesheet" href="/js/layui/css/layui.css"  media="all"/>
+<script type="text/javascript" src="/js/layui/layui.js"></script>
+<script src="/js/layui/layui.all.js" charset="UTF-8"></script>
+<script src="/js/layui/lay/modules/tree.js"></script>
+
+<body>
+<input type="hidden" id="hiddenid" th:value="${gid}">
+
+<textarea name="liyou" id="liyouid">
+</textarea>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="zysaddliyou()">
+        <i class="layui-icon">提交</i>
+    </button>
+
+</body>
+<script>
+  function zysaddliyou(){
+      var liyou=$("#liyouid").val();
+      var gid=$("#hiddenid").val();
+      $.ajax({
+          url:"../ground/zysaddliyou",
+          data:{gid:gid,liyou:liyou},
+          type:"post",
+          success:function(data){
+              alert("已拒绝");
+          }
+
+      })
+  }
+</script>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/jdbc">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="/js/jquery-1.9.1.min.js"></script>
+<link rel="stylesheet" href="/js/layui/css/layui.css"/>
+<link rel="stylesheet" href="/js/layui/css/modules/laydate/default/laydate.css"/>
+<link rel="stylesheet" href="/js/layui/css/layui.css"  media="all"/>
+<script type="text/javascript" src="/js/layui/layui.js"></script>
+<script src="/js/layui/layui.all.js" charset="UTF-8"></script>
+<script src="/js/layui/lay/modules/tree.js"></script>
+<body>
+<div>
+    <form id="formid">
+
+        <input type="hidden" name="gid" value="1" id="hiddenid">
+
+        <div>
+        <select  name="xuanze" id="xuanzeid">
+            <option value="1">订单号</option>
+            <option value="2">发货人姓名</option>
+            <option value="3">发货人手机号</option>
+        </select>
+        </div>
+        <div  style="margin-top: -20px;margin-left: 108px">
+
+                <input type="text" name="quanbu"  placeholder="请输入"  id="quanbuid">
+
+        </div>
+
+
+        <select  name="tihuoxuanze" id="tihuoxuanzeid">
+            <option value="">全部订单</option>
+            <option value="1">需要上门提货</option>
+            <option value="2">无需上门提货</option>
+        </select>
+
+        <select  name="fukuanfangshi" id="fukuanfangshiid">
+            <option value="0">全部订单</option>
+            <option value="1">已付款</option>
+            <option value="2">待付款</option>
+            <option value="3">运费到付</option>
+        </select><br/>
+
+        <input type="hidden" id="dizhiid">
+        <select  name="fahuodi" id="fahuoid">
+            <option value="0">按收货地</option>
+            <option value="1">按发货地</option>
+        </select>
+            <div class="layui-input-inline">
+                <select id="provinceid" name="sheng" onchange="getcity()" >
+                </select>
+            </div>
+
+            <div class="layui-input-inline">
+                <select id="cityid" name="shi" onchange="getcounty()">
+                </select>
+            </div>
+
+            <div class="layui-input-inline">
+                <select  name="xian" id="countyid">
+                </select>
+            </div>
+
+
+        <div>
+        下单时间：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">开始日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="stadate" id="startDateId" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        ----
+        <div class="layui-inline">
+            <label class="layui-form-label">结束日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="enddate" id="endDateId" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="" lay-filter="demo1">筛选</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="">导出</button>
+</div>
+
+
+<div><table class="layui-hide" id="test"  lay-filter="tblist"></table></div>
+</body>
+
+
+<script>
+    $(function(){
+        fangfa();
+    })
+
+    var data;
+    function fangfa() {
+        var gid=$("#hiddenid").val(); //获取公司名
+       /* var xuanze=$("#xuanzeid").val();//查看是什么类型进行查询
+        var quanbu=$("#quanbuid").val();
+        var tihuoxuanze=$("#tihuoxuanzeid").val();
+        var fukuanfangshi=$("#fukuanfangshiid").val();
+        var fahuodi=$("#fahuoid").val();
+        var stadate=$("#startDateId").val();//开始时间
+        var enddate=$("#endDateId").val();//结束时间
+
+        var sheng=$("#provinceid").val();//省
+        var shi=$("#cityid").val();//市
+        var xian=$("#countyid").val();//县
+
+        var dizhi=$("#dizhiid").val(sheng+"-"+shi+"-"+xian);*/
+
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#test'
+                , url: '../ground/zysreferdata?gongsiid='+gid
+               /*,where:{
+                    gid:gid,
+                    xuanze:xuanze,
+                    quanbu:quanbu,
+                    tihuoxuanze:tihuoxuanze,
+                    fukuanfangshi:fukuanfangshi,
+                    fahuodi:fahuodi,
+                    stadate:stadate,
+                    enddate:enddate,
+                    dizhi:dizhi,
+                }*/
+                , cols: [
+                    [
+
+                         {field: 'id', width: 80, title: 'id', sort: true},
+                         {field: 'dingdanhao', width: 80, title: '订单号', sort: true}
+                        , {field: 'adate', width: 80, title: '下单时间', sort: true}
+                        ,{field: 'origin',  minWidth: 100, title: '始发地'}
+                        , {field: 'provenance',  minWidth: 100, title: '目的地'}
+                        , {field: 'contact', width: 80, title: '发货人',}
+                        , {field: 'cargoInformation', width: 80, title: '重量'}
+                        , {field: 'shangdate', title: '上门提货时间',width: 80}
+                        , {field: 'phone', width: 80, title: '电话', sort: true}
+                        , {field: 'yuguprice', width: 80, title: '预估运费', sort: true}
+                        ,{fixed: 'right', title:'操作', width:178, align:'center', toolbar: '#barDemo'}
+                    ]
+                ]
+                , limit: 2
+                , limits: [1, 2, 5, 10]
+                , method: 'post'
+                , page: true
+                , request: {
+                    page: 'pageNo', //页码的参数名称，默认：page
+                    limit: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+            });
+            //通过添加监听
+            table.on('tool(tblist)', function(obj) {
+                data = obj.data;
+                //然后data.你的值就可以了
+                //alert(data.id);
+            })
+        });
+    }
+</script>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="detail" href="javascript:referorder(data.id)">订单详情</a>
+</script>
+
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,laydate = layui.laydate;
+        //日期
+        laydate.render({
+            elem: '#startDateId'
+        });
+        laydate.render({
+            elem: '#endDateId'
+        });
+    });
+
+    $(function (){
+        var shengObj =  document.getElementById("provinceid");
+        // 获取市对象
+        var shiObj =  document.getElementById("cityid");
+        // 获取县对象
+        var xianObj =  document.getElementById("countyid");
+        var str = "<option value=0> 请选择 </option>";
+        $.ajax({
+            url:"../ground/getzysprovince",
+            type:"post",
+            success:function(data){
+
+                for(var i=0; i<data.length; i++){
+                    //alert(data[i].id);
+                    // 判断上级id 为0，如果是0，代表是省
+                        str += "<option value="+data[i].id +"> " + data[i].name +"</option>";
+
+                }
+                shengObj.innerHTML=str;
+
+                shiObj.innerHTML = "<option value=0> 请选择 </option>";
+                xianObj.innerHTML = "<option value=0> 请选择 </option>";
+            },error:function(){
+                alert("查询错误");
+            }
+        });
+
+
+    })
+
+    function getcity(){
+   var id=$("#provinceid").val();
+   var shiObj =  document.getElementById("cityid");
+   var str = "<option value=0> 请选择 </option>";
+   $.ajax({
+       url:"../ground/zysgetcity",
+       data:{id:id},
+       type:"post",
+       success:function(data){
+           for(var i=0; i<data.length; i++){
+               //alert(data[i].id);
+               // 判断上级id 为0，如果是0，代表是省
+               str += "<option value="+data[i].id +"> " + data[i].name +"</option>";
+
+           }
+           shiObj.innerHTML = str;
+
+       }
+   })
+    }
+
+    function getcounty(){
+        var id=$("#cityid").val();
+        var xianObj =  document.getElementById("countyid");
+        var str = "<option value=0> 请选择 </option>";
+        $.ajax({
+            url:"../ground/zysgetcounty",
+            data:{id:id},
+            type:"post",
+            success:function(data){
+                for(var i=0; i<data.length; i++){
+                    //alert(data[i].id);
+                    // 判断上级id 为0，如果是0，代表是省
+                    str += "<option value="+data[i].id +"> " + data[i].name +"</option>";
+
+                }
+                xianObj.innerHTML = str;
+
+            }
+        })
+    }
+
+
+
+    function referorder(id){
+        //alert(id);
+       location.href="../ground/todetailed?id="+id;
+    }
+</script>
+</html>
